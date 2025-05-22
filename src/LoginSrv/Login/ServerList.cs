@@ -1,4 +1,4 @@
-﻿namespace Ystx2.Login;
+﻿namespace N3.Login;
 
 public class ServerList : Dictionary<string, ServerItem>
 {

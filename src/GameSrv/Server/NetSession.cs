@@ -1,4 +1,4 @@
-﻿namespace Ystx2;
+﻿namespace N3;
 
 public class NetSession(uint netId, Entity root) : Entity(netId, root)
 {

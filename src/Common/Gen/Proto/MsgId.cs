@@ -2,7 +2,7 @@ using ProtoBuf;
 using N3Core;
 using System.Collections.Generic;
 
-namespace Ystx2
+namespace N3
 {
     public enum MsgId
     {

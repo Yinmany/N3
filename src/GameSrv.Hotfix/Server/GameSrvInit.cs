@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using Cysharp.Threading.Tasks;
-using Ystx2;
+using N3;
 
 [assembly: ServerType(ServerType.Game), ServerInit(typeof(GameSrvInit))]
 
-namespace Ystx2;
+namespace N3;
 
 public class GameSrvInit : IServerInit
 {

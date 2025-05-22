@@ -1,5 +1,5 @@
 syntax = "proto3";
-option csharp_namespace = "Ystx2";
+option csharp_namespace = "N3";
 
 /**
  消息id由3位功能id+3位序号组成

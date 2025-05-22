@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<enum name="ErrCode" namespace="Ystx2" i18n="zh">
+<enum name="ErrCode" namespace="N3" i18n="zh">
     <var name="OK" value="0"/>
 
     <!--  用户登录相关  -->

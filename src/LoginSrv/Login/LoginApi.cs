@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace Ystx2.Login;
+namespace N3.Login;
 
 [ApiController]
 [Route("api/[action]")]

@@ -1,4 +1,4 @@
-﻿namespace Ystx2;
+﻿namespace N3;
 
 [Invokable(InvokeId.GameServerInfoTimer)]
 public class GameServerInfoTimer : ATimer<ServerApp>

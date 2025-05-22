@@ -1,5 +1,5 @@
 
-namespace Ystx2
+namespace N3
 {
     public static partial class ErrCode
     {

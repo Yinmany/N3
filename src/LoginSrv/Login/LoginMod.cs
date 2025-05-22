@@ -1,5 +1,5 @@
 ﻿
-namespace Ystx2.Login;
+namespace N3.Login;
 
 public class LoginMod : IAsyncDisposable
 {
@@ -12,8 +12,7 @@ public class LoginMod : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        _logger.Info("销毁...");
-        await Task.Delay(5000);
-
+        _logger.Info("释放...");
+        await Task.Delay(1000);
     }
 }

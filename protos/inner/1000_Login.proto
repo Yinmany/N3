@@ -1,7 +1,7 @@
 //@using System
 
 syntax = "proto3";
-option csharp_namespace = "Ystx2";
+option csharp_namespace = "N3";
 
 message L2W_LoginReq {
   int32 userId = 1;

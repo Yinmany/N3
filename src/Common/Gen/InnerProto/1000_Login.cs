@@ -3,13 +3,13 @@ using N3Core;
 using System.Collections.Generic;
 using System;
 
-namespace Ystx2
+namespace N3
 {
     
     [ProtoContract]
     public partial class L2W_LoginReq : IRequest
     {
-        public const int _MsgId_ = (int)Ystx2.InnerMsgId.L2W_LoginReq;
+        public const int _MsgId_ = (int)N3.InnerMsgId.L2W_LoginReq;
         public int MsgId => _MsgId_;
         [ProtoMember(1)] public int RpcId { get; set; }
         [ProtoMember(2)] public int UserId { get; set; }
@@ -18,7 +18,7 @@ namespace Ystx2
     [ProtoContract]
     public partial class L2W_LoginRsp : IResponse
     {
-        public const int _MsgId_ = (int)Ystx2.InnerMsgId.L2W_LoginRsp;
+        public const int _MsgId_ = (int)N3.InnerMsgId.L2W_LoginRsp;
         public int MsgId => _MsgId_;
         [ProtoMember(1)] public int RpcId { get; set; }
         [ProtoMember(2)] public int ErrCode { get; set; }

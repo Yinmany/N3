@@ -1,4 +1,4 @@
-﻿namespace Ystx2.Event
+﻿namespace N3.Event
 {
     [Invokable(InvokeId.NetDisConnect)]
     class OnNetDisConnect : AInvokable<NetSession>

@@ -1,7 +1,7 @@
 ﻿using NLog.Extensions.Logging;
-using Ystx2.Login;
+using N3.Login;
 
-namespace Ystx2;
+namespace N3;
 
 public class LoginSrvApp : ServerApp
 {

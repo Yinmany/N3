@@ -7,7 +7,7 @@ using MongoDB.Bson;
 using N3Lib.Buffer;
 using N3Lib.Network;
 
-namespace Ystx2;
+namespace N3;
 
 /// <summary>
 /// 客户端连接的网络

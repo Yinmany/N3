@@ -3,7 +3,7 @@ using N3Core;
 using System.Collections.Generic;
 using System;
 
-namespace Ystx2
+namespace N3
 {
     
     /// <summary> 角色外观数据 </summary>
