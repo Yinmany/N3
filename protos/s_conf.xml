@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf>
+    <!-- 服务端生成配置 -->
+    <var name="srv_dir" value="../src"/>
+    <var name="srv_proto_dir" value="../src/Common/Gen"/>
+
+    <proto in="./comm" out="${srv_proto_dir}/Proto" tpl="Tpl/proto_cs" />
+    <proto in="./outer" out="${srv_proto_dir}/Proto" tpl="Tpl/proto_cs" msg_id="MsgId.proto" />
+    <proto in="./inner" out="${srv_proto_dir}/InnerProto" tpl="Tpl/proto_cs" msg_id="InnerMsgId.proto" />
+    <enum in="./error_code.xml" out="${srv_proto_dir}" tpl="Tpl/enum_cs.tpl" />
+
+    <!-- 生成消息处理器 -->
+    <handler namespace="Ystx2.Protocol" tpl="Tpl/handler_cs" msg_id="./outer/MsgId.proto" using="FastSu;Cysharp.Threading.Tasks">
+        <gen type="100" prefix="C2G_" ctx_type="NetSession" out="${srv_dir}/GameSrv.Hotfix/Protocol/Login" />
+    </handler>
+</conf>

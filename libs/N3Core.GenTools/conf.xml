@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf>
+    <!-- 协议生成配置: in=协议所在目录 out=生成到的目录 tpl=使用的模板 msg_id=消息id定义文件 -->
+    <proto in="./Proto" out="./Proto/gen" tpl="Tpl/proto_cs" msg_id="MsgId.proto"/>
+
+    <!--  枚举生成  -->
+    <enum in="./ErrCode.xml" out="./" tpl="Tpl/enum_cs.tpl"/>
+</conf>

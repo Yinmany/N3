@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Ystx2</RootNamespace>
+    </PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\ServerApp\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\ServerApp\bin\Release\</OutputPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\GameSrv\GameSrv.csproj" />
+    </ItemGroup>
+	
+	<ItemGroup>
+		<Using Include="N3Lib" />
+		<Using Include="N3Core" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Protocol\" />
+	</ItemGroup>
+</Project>

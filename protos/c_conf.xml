@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conf>
+
+    <var name="client_dir" value="../../Client/Assets/_Src.HotUpdate"/>
+
+    <!-- 协议生成配置: in=协议所在目录 out=生成到的目录 tpl=使用的模板 msg_id=消息id定义文件 -->
+    <proto in="./comm" out="${client_dir}/Gen/Proto" tpl="Tpl/proto_cs" />
+    <proto in="./outer" out="${client_dir}/Gen/Proto" tpl="Tpl/proto_cs" msg_id="MsgId.proto" />
+    <enum in="./error_code.xml" out="${client_dir}/Gen/" tpl="Tpl/enum_cs.tpl" i18n="true" />
+</conf>

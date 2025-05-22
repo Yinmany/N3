@@ -1,0 +1,18 @@
+syntax = "proto3";
+option csharp_namespace = "Ystx2";
+
+/**
+ 消息id由3位功能id+3位序号组成
+ 内部使用:从1000开始
+    登录: 1000
+ */
+
+enum InnerMsgId {
+  None = 0;
+
+  // 内部使用
+  L2W_LoginReq = 1000001;
+  L2W_LoginRsp = 1000002;
+  L2W_QueryGameSrvReq = 1000003;
+  L2W_QueryGameSrvRsp = 1000004;
+}

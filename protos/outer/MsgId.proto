@@ -1,0 +1,39 @@
+syntax = "proto3";
+option csharp_namespace = "Ystx2";
+
+/**
+ 消息id由3位功能id+3位序号组成
+ 功能id小于3为的都是自定义的其它用途
+    登录: 100
+    角色: 101
+    物品: 102
+*/
+
+enum MsgId {
+  None = 0;
+
+  PingReq = 1;
+  PingRsp = 2;
+ 
+  HttpLoginVerifyReq = 1001; // http登录使用的
+  HttpLoginVerifyRsp = 1002;
+  HttpGetNoticeRsp   = 1003;
+  HttpGetServerInfoReq = 1004;
+  HttpGetServerInfoRsp = 1005;
+
+  // 登录模块 100
+  G2C_RoleKickoutMsg       = 100000;
+  C2G_RoleLoginCheckReq = 100001;
+  C2G_RoleLoginCheckRsp = 100002;
+  C2G_RoleLoginReq      = 100003;
+  C2G_RoleLoginRsp      = 100004;
+
+  C2G_EnterSceneReq    = 100006;
+  C2G_EnterSceneRsp    = 100007;
+
+  // 角色 101
+  G2C_Role_InfoMsg      = 101000;
+
+  // 物品 102
+  G2C_Item_InfoMsg       = 102000; // 角色的物品信息
+}

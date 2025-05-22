@@ -1,0 +1,87 @@
+//@using System
+
+syntax = "proto3";
+package ystx2;
+option csharp_namespace = "Ystx2";
+import "../comm/Model.proto";
+
+message PingReq 
+{
+}
+
+message PingRsp 
+{
+  
+}
+
+// 登录请求
+message HttpLoginVerifyReq 
+{
+  string account = 1; // 账号
+  string pwd = 2;     // 密码
+}
+
+message HttpLoginVerifyRsp 
+{
+  string token = 1;
+  string serverAddr = 2;
+}
+
+// 获取公告信息
+message HttpGetNoticeRsp
+{
+  string title = 1;
+  string context = 2;
+  bool isExists = 3; // 是否存在公告
+}
+
+message HttpGetServerInfoReq
+{
+  string Channel = 1; // 渠道
+}
+
+message HttpGetServerInfoRsp
+{
+  string ResAddr = 1; // 资源更新地址
+  string ResAddr2 = 2; // 后备地址
+  string LoginServer = 3; // 登录服地址
+}
+
+// 角色踢出消息
+message G2C_RoleKickoutMsg
+{
+  int32 reason = 1;
+}
+
+// 登录游戏服
+message C2G_RoleLoginCheckReq 
+{
+  string token = 1;
+}
+
+message C2G_RoleLoginCheckRsp 
+{
+  
+}
+
+// 角色登录请求
+message C2G_RoleLoginReq
+{
+  
+}
+
+message C2G_RoleLoginRsp
+{
+
+}
+
+// 进入场景请求
+message C2G_EnterSceneReq
+{
+  int64 scene_id = 1;
+}
+
+message C2G_EnterSceneRsp
+{
+  int64 scene_id = 1; // 进入的场景id
+}

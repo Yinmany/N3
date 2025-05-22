@@ -1,0 +1,16 @@
+//@using System
+
+syntax = "proto3";
+package ystx2;
+option csharp_namespace = "Ystx2";
+import "../comm/Model.proto";
+
+// 角色基础数据消息
+message G2C_Role_InfoMsg
+{
+  int32 role_id = 1; // 角色id
+  string name  = 2; // 角色名称
+  int32 sex = 3;    // 角色性别: 0无 1男 2女
+  int32 exp = 4;    // 经验
+  PbRoleAppearance Appearance = 5; // 外观
+}

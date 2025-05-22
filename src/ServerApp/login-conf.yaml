@@ -1,0 +1,12 @@
+﻿server_list:
+    default:
+        name: 默认服
+        resAddr: http://192.168.10.104:8081
+        resAddr2: http://192.168.10.104:8081
+        loginServer: http://192.168.10.104:5078
+
+    dev:
+        name: 开发服
+        resAddr: http://192.168.10.104:8081
+        resAddr2: http://192.168.10.104:8081
+        loginServer: http://192.168.10.104:5078

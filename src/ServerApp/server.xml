@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<conf>
+
+	<!--  通用配置 -->
+	<config>
+		<key name="rdb" value="localhost:6379"/>
+		<key name="db" value="mongodb://127.0.0.1:27017/ys2_game"/>
+	</config>
+
+	<!--  server配置: id=节点id type=1.world 2.game 3.login -->
+	<node id="1" listen="127.0.0.1:10001">
+		<server id="1" name="world" type="1">
+			<key name="xxx" value="xxx"/>
+		</server>
+
+		<server id="2" name="game-1" type="2">
+			<key name="listen" value="192.168.10.200:9000"/>
+		</server>
+
+		<server id="1" name="login" type="3">
+			<key name="rdb" value="localhost:6379"/>
+			<key name="db" value="mongodb://127.0.0.1:27017/ys2_account"/>
+		</server>
+	</node>
+
+	<!--  登录服节点  -->
+	<node id="300" listen="127.0.0.1:10300">
+		<server id="1" name="login" type="3">
+			<key name="rdb" value="localhost:6379"/>
+			<key name="db" value="mongodb://127.0.0.1:27017/ys2_account"/>
+		</server>
+	</node>
+
+</conf>

@@ -1,0 +1,11 @@
+//@using System
+
+syntax = "proto3";
+package ystx2;
+option csharp_namespace = "Ystx2";
+
+// 角色外观数据
+message PbRoleAppearance
+{
+    
+}
