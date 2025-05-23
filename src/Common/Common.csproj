@@ -11,12 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\libs\N3Core\N3Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="N3Lib" />
-		<Using Include="N3Core" />
+		<ProjectReference Include="..\..\libs\N3.Server\N3.Server.csproj" />
 	</ItemGroup>
 
 </Project>

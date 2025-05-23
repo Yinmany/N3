@@ -13,8 +13,5 @@
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
-	<ItemGroup>
-		<Using Include="N3Lib" />
-		<Using Include="N3Core" />
-	</ItemGroup>
+
 </Project>

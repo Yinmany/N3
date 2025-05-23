@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.IO.Pipelines" Version="8.0.0" />
+      <PackageReference Include="UniTask" Version="2.5.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\N3.Buffer\N3.Buffer.csproj" />
+      <ProjectReference Include="..\N3.Base\N3.Base.csproj" />
+    </ItemGroup>
+</Project>

@@ -5,35 +5,37 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginSrv", "src\LoginSrv\LoginSrv.csproj", "{19CDEF64-EA3D-406C-A61B-49301F2394FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Core", "libs\N3Core\N3Core.csproj", "{A949227D-D7FB-4587-9456-0520126C64D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.Server", "libs\N3.Server\N3.Server.csproj", "{A949227D-D7FB-4587-9456-0520126C64D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Lib.Network", "libs\N3Lib.Network\N3Lib.Network.csproj", "{1E4EA551-1601-4283-99DF-BB6EBD94B84B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.Transport", "libs\N3.Transport\N3.Transport.csproj", "{1E4EA551-1601-4283-99DF-BB6EBD94B84B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{EB7B4128-208A-4200-AF7D-B414AA14253F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Core.GenTools", "libs\N3Core.GenTools\N3Core.GenTools.csproj", "{DF366363-6232-40F3-94B8-51B16C1488D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.GenTools", "libs\N3.GenTools\N3.GenTools.csproj", "{DF366363-6232-40F3-94B8-51B16C1488D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{81CFE3DC-103C-4750-A46D-15F5615E2C03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerApp", "src\ServerApp\ServerApp.csproj", "{EE4AB427-A905-4271-BC3D-F511948798F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "src\App\App.csproj", "{EE4AB427-A905-4271-BC3D-F511948798F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldSrv", "src\WorldSrv\WorldSrv.csproj", "{10DB61FE-2A7A-455A-842E-3549387CEDF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldSrv.Hotfix", "src\WorldSrv.Hotfix\WorldSrv.Hotfix.csproj", "{417E84D2-E9A3-49B1-90B4-DAF09DF64F53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Core.AspNetCore", "libs\N3Core.AspNetCore\N3Core.AspNetCore.csproj", "{D4709842-FBC1-4DA0-B003-647F80AA156B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.AspNetCore", "libs\N3.AspNetCore\N3.AspNetCore.csproj", "{D4709842-FBC1-4DA0-B003-647F80AA156B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSrv", "src\GameSrv\GameSrv.csproj", "{98F65A6A-8052-46CC-9AA5-A56F32383F69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSrv.Hotfix", "src\GameSrv.Hotfix\GameSrv.Hotfix.csproj", "{19923984-6A4E-495A-B240-09DBB20D6D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Core.Tests", "libs\N3Core.Tests\N3Core.Tests.csproj", "{FC289CF3-8FB5-432B-95B0-D367415280FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.Server.Tests", "libs\N3.Server.Tests\N3.Server.Tests.csproj", "{FC289CF3-8FB5-432B-95B0-D367415280FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Lib.Buffer", "libs\N3Lib.Memory\N3Lib.Buffer.csproj", "{0BA3928A-CBD6-46D8-AD9D-A4DF11105DBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.Buffer", "libs\N3.Buffer\N3.Buffer.csproj", "{0BA3928A-CBD6-46D8-AD9D-A4DF11105DBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Lib", "libs\N3Lib\N3Lib.csproj", "{458207C4-B67A-7747-4048-EC1C45938EF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.Base", "libs\N3.Base\N3.Base.csproj", "{458207C4-B67A-7747-4048-EC1C45938EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3Lib.NLog", "libs\N3Lib.NLog\N3Lib.NLog.csproj", "{0C838643-9047-4529-8DBB-37EFEBD79A3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N3.NLog", "libs\N3.NLog\N3.NLog.csproj", "{0C838643-9047-4529-8DBB-37EFEBD79A3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GateSrv", "src\GateSrv\GateSrv.csproj", "{2CA613DA-F2A4-4554-82C6-C05825408215}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,10 @@ Global
 		{0C838643-9047-4529-8DBB-37EFEBD79A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C838643-9047-4529-8DBB-37EFEBD79A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C838643-9047-4529-8DBB-37EFEBD79A3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CA613DA-F2A4-4554-82C6-C05825408215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CA613DA-F2A4-4554-82C6-C05825408215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CA613DA-F2A4-4554-82C6-C05825408215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CA613DA-F2A4-4554-82C6-C05825408215}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

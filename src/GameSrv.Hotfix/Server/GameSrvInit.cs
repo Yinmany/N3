@@ -27,13 +27,8 @@ public class GameSrvInit : IServerInit
 
         app.AddComp(new ActorComp());
 
-        NetworkComp.EnableDebug = true;
-        NetworkComp network = app.AddComp(new NetworkComp());
-        network.Listen(IPEndPoint.Parse(listen));
-
         EventSystem eventSystem = app.GetComp<EventSystem>();
         eventSystem.AddInterval(TimeSpan.FromSeconds(5), InvokeId.GameServerInfoTimer, app);
-
 
         return UniTask.CompletedTask;
     }

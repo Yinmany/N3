@@ -17,13 +17,4 @@
     <ItemGroup>
       <ProjectReference Include="..\GameSrv\GameSrv.csproj" />
     </ItemGroup>
-	
-	<ItemGroup>
-		<Using Include="N3Lib" />
-		<Using Include="N3Core" />
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Folder Include="Protocol\Login\" />
-	</ItemGroup>
 </Project>

@@ -17,9 +17,4 @@
 	<ItemGroup>
 		<ProjectReference Include="..\WorldSrv\WorldSrv.csproj"/>
 	</ItemGroup>
-	
-	<ItemGroup>
-		<Using Include="N3Lib" />
-		<Using Include="N3Core" />
-	</ItemGroup>
 </Project>
