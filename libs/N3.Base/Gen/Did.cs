@@ -57,5 +57,11 @@ namespace N3
         {
             return (long)((ulong)id.Time << 32 | (ulong)id.NodeId << SeqBits | (uint)id.Seq);
         }
+
+        public override string ToString()
+        {
+            long l = this;
+            return $"{l}";
+        }
     }
 }

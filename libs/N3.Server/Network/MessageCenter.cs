@@ -20,6 +20,7 @@ public interface IMessageReceiver
 
 public interface IMessageCenter
 {
+    void Listen(IPEndPoint bindIp);
     void AddNode(ushort nodeId, IPEndPoint ip);
     bool RemoveNode(ushort id, bool disconnect = true);
     void AddReceiver(long id, IMessageReceiver receiver);
@@ -73,7 +74,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         TimerMgr.Ins.AddInterval(TimeSpan.FromSeconds(5), OnTimeout);
     }
 
-    private void Listen(IPEndPoint bindIp)
+    public void Listen(IPEndPoint bindIp)
     {
         SLog.Info($"listen {bindIp}...");
         TcpConnListener listener = new TcpConnListener(_socketSchedulers);
@@ -131,23 +132,16 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     {
         this.Post(_ =>
         {
-            if (Did.LocalNodeId != nodeId)
+            if (_sessions.TryGetValue(nodeId, out var session))
             {
-                if (_sessions.TryGetValue(nodeId, out var session))
-                {
-                    SLog.Info($"node ip change {nodeId} {ip}");
-                    session.ChangeIp(ip);
-                }
-                else
-                {
-                    SLog.Info($"add node {nodeId} {ip}");
-                    _sessions.Add(nodeId, new ClientSession(nodeId, ip, _socketSchedulers.GetScheduler(), OnRpcError));
-                }
-
-                return;
+                SLog.Info($"node ip change {nodeId} {ip}");
+                session.ChangeIp(ip);
             }
-
-            Listen(ip);
+            else
+            {
+                SLog.Info($"add node {nodeId} {ip}");
+                _sessions.Add(nodeId, new ClientSession(nodeId, ip, _socketSchedulers.GetScheduler(), OnRpcError, this));
+            }
         }, null);
     }
 

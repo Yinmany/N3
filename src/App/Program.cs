@@ -5,6 +5,7 @@ using NLog;
 using System.Net;
 using Cysharp.Threading.Tasks;
 using ProjectX;
+using ProjectX.DB;
 
 try
 {
@@ -27,6 +28,17 @@ try
     bool isLoginSrv = list.Any(x => x.Type == ServerType.Login);
     if (isLoginSrv && LoginSrvApp.CheckServerConfig() != 0)
         return;
+    if (isLoginSrv)
+    {
+        //AccountDb.Init(dbConnStr, rdbConnStr);
+    }
+
+    // 是否存在非登录服的其它服
+    bool isGameSrv = list.Any(x => x.Type != ServerType.Login);
+    if (isGameSrv)
+    {
+        //GameDb.Init(dbConnStr, rdbConnStr);
+    }
 
     // 注册序列化器
     var objectSerializer = new ObjectSerializer(ObjectSerializer.AllAllowedTypes);
@@ -42,7 +54,7 @@ try
     //  添加本地节点
     IPEndPoint? localNodeBindIp = ServerConfig.GetNodeIp(nodeId);
     if (localNodeBindIp != null)
-        MessageCenter.Ins.AddNode(nodeId, localNodeBindIp);
+        MessageCenter.Ins.Listen(localNodeBindIp);
 
     // 注册中心服节点
     RegisterWorldSrvNode();
@@ -60,7 +72,7 @@ try
             PosixSignalHook.Ins.AddStopCallback(app.Shutdown);
         }
 
-        SLog.Info($"创建ServerApp: {cfg.Id} {cfg.Type} {cfg.Name}");
+        SLog.Info($"创建ServerApp: {cfg.Id} {cfg.Type} {cfg.Name} {Did.Make(cfg.Id, ServerConfig.LocalNodeId)}");
     }
 
     await PosixSignalHook.Ins.WaitForExitAsync();
@@ -77,7 +89,7 @@ finally
 
 void UniTaskScheduler_UnobservedTaskException(Exception obj)
 {
-    SLog.Error(obj);
+    SLog.Error(obj, "UnobservedTaskException");
 }
 
 void RegisterWorldSrvNode()
@@ -96,7 +108,7 @@ void RegisterWorldSrvNode()
         SLog.Error("world server ip not found");
         return;
     }
-    if (ServerConfig.LocalNodeId != worldConfig.NodeId)
-        MessageCenter.Ins.AddNode(worldConfig.NodeId, worldIp);
+
+    MessageCenter.Ins.AddNode(worldConfig.NodeId, worldIp);
     SLog.Info($"注册中心服: {worldConfig.NodeId}, {worldIp}");
 }

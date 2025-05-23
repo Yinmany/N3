@@ -13,15 +13,17 @@ public partial class MessageCenter
         private readonly ushort _nodeId;
         private readonly IOQueue _ioQueue;
         private readonly Action<int, RpcException> _rpcErrCallback;
+        private readonly IConnHandler connHandler;
         private TcpConn _conn;
         private IPEndPoint _ip;
 
-        public ClientSession(ushort nodeId, IPEndPoint ip, IOQueue ioQueue, Action<int, RpcException> rpcErrCallback)
+        public ClientSession(ushort nodeId, IPEndPoint ip, IOQueue ioQueue, Action<int, RpcException> rpcErrCallback, IConnHandler connHandler)
         {
             _nodeId = nodeId;
             _ip = ip;
             _ioQueue = ioQueue;
             _rpcErrCallback = rpcErrCallback;
+            this.connHandler = connHandler;
             //_ = Connect();
         }
 
@@ -43,9 +45,9 @@ public partial class MessageCenter
 
         public bool Send(ByteBuf buf)
         {
-            if (_conn.ClosedToken.IsCancellationRequested) // 重新再次连接
+            if (_conn is null || _conn.ClosedToken.IsCancellationRequested) // 重新再次连接
                 _ = Connect();
-            return _conn.Send(buf);
+            return _conn!.Send(buf);
         }
 
         public void AddTimeout(int rpcId, short timeout)
@@ -69,9 +71,11 @@ public partial class MessageCenter
             try
             {
                 _conn = new TcpConn(_ip, _ioQueue);
+                _conn.Handler = connHandler;
                 SendNodeInfo();
 
                 await _conn.ConnectAsync();
+                SLog.Info($"[C] node connect: dst {this._nodeId} {_ip}");
                 _conn.Start();
             }
             catch (Exception e)

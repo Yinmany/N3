@@ -49,6 +49,12 @@ public class HandlerGenConfig
     [XmlAttribute("id")]
     public string Id { get; set; }
 
+    /// <summary>
+    /// 从id中获取Type的除数
+    /// </summary>
+    [XmlAttribute("id_type_div")]
+    public int IdTypeDiv { get; set; }
+
     [XmlAttribute("prefix")]
     public string Prefix { get; set; }
 

@@ -10,6 +10,8 @@ public class WorldSrvInit : IServerInit
 {
     public UniTask OnInit(ServerApp app)
     {
+        app.AddComp(new ActorComp());
+
         SLog.Info("OnInit");
         return UniTask.CompletedTask;
     }

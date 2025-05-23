@@ -7,14 +7,18 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<OutputPath>..\ServerApp\bin\Debug\</OutputPath>
+		<OutputPath>..\App\bin\Debug\</OutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>..\ServerApp\bin\Release\</OutputPath>
+		<OutputPath>..\App\bin\Release\</OutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\WorldSrv\WorldSrv.csproj"/>
+		<ProjectReference Include="..\WorldSrv\WorldSrv.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Protocol\" />
 	</ItemGroup>
 </Project>

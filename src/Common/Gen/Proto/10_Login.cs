@@ -90,75 +90,22 @@ namespace ProjectX
         [ProtoMember(6)] public string LoginServer { get; set; }
     }
     
-    /// <summary> 角色踢出消息 </summary>
     [ProtoContract]
-    public partial class G2C_RoleKickoutMsg : IMessage
+    public partial class C2G_Login_GateReq : IRequest
     {
-        public const int _MsgId_ = (int)ProjectX.MsgId.G2C_RoleKickoutMsg;
-        public int MsgId => _MsgId_;
-    
-        [ProtoMember(1)] public int Reason { get; set; }
-    }
-    
-    /// <summary> 登录游戏服 </summary>
-    [ProtoContract]
-    public partial class C2G_RoleLoginCheckReq : IRequest
-    {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_RoleLoginCheckReq;
+        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_Login_GateReq;
         public int MsgId => _MsgId_;
         [ProtoMember(1)] public int RpcId { get; set; }
-        [ProtoMember(2)] public string Token { get; set; }
     }
     
     [ProtoContract]
-    public partial class C2G_RoleLoginCheckRsp : IResponse
+    public partial class C2G_Login_GateRsp : IResponse
     {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_RoleLoginCheckRsp;
+        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_Login_GateRsp;
         public int MsgId => _MsgId_;
         [ProtoMember(1)] public int RpcId { get; set; }
         [ProtoMember(2)] public int ErrCode { get; set; }
         [ProtoMember(3)] public string ErrMsg { get; set; }
-    }
-    
-    /// <summary> 角色登录请求 </summary>
-    [ProtoContract]
-    public partial class C2G_RoleLoginReq : IRequest
-    {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_RoleLoginReq;
-        public int MsgId => _MsgId_;
-        [ProtoMember(1)] public int RpcId { get; set; }
-    }
-    
-    [ProtoContract]
-    public partial class C2G_RoleLoginRsp : IResponse
-    {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_RoleLoginRsp;
-        public int MsgId => _MsgId_;
-        [ProtoMember(1)] public int RpcId { get; set; }
-        [ProtoMember(2)] public int ErrCode { get; set; }
-        [ProtoMember(3)] public string ErrMsg { get; set; }
-    }
-    
-    /// <summary> 进入场景请求 </summary>
-    [ProtoContract]
-    public partial class C2G_EnterSceneReq : IRequest
-    {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_EnterSceneReq;
-        public int MsgId => _MsgId_;
-        [ProtoMember(1)] public int RpcId { get; set; }
-        [ProtoMember(2)] public long SceneId { get; set; }
-    }
-    
-    [ProtoContract]
-    public partial class C2G_EnterSceneRsp : IResponse
-    {
-        public const int _MsgId_ = (int)ProjectX.MsgId.C2G_EnterSceneRsp;
-        public int MsgId => _MsgId_;
-        [ProtoMember(1)] public int RpcId { get; set; }
-        [ProtoMember(2)] public int ErrCode { get; set; }
-        [ProtoMember(3)] public string ErrMsg { get; set; }
-        /// <summary> 进入的场景id </summary>
-        [ProtoMember(4)] public long SceneId { get; set; }
     }
     
 }

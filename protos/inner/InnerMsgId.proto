@@ -2,17 +2,22 @@ syntax = "proto3";
 option csharp_namespace = "ProjectX";
 
 /**
- 消息id由3位功能id+3位序号组成
- 内部使用:从1000开始
-    登录: 1000
+ 消息id由2位功能id+2位序号组成; 内部消息不涉及转发规则
+ 内部使用:从10开始
+    登录: 10
  */
 
 enum InnerMsgId {
   None = 0;
 
+  // 服务发现
+  A2W_SD_AddReq = 0001;
+  A2W_SD_AddRsp = 0002;
+  W2A_SD_AddMsg = 0003;
+
   // 内部使用
-  L2W_LoginReq = 1000001;
-  L2W_LoginRsp = 1000002;
-  L2W_QueryGameSrvReq = 1000003;
-  L2W_QueryGameSrvRsp = 1000004;
+  // L2W_LoginReq = 1001;
+  // L2W_LoginRsp = 1002;
+  // L2W_QueryGameSrvReq = 1003;
+  // L2W_QueryGameSrvRsp = 1004;
 }

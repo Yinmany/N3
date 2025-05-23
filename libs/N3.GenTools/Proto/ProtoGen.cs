@@ -83,6 +83,7 @@ public static class ProtoGen
                         if (msgIdDefine == null && isNetMessage)
                         {
                             SLog.Error($"未找到MsgId: {protoMessage.Name} {option.DefineStr}");
+                            continue;
                         }
                     }
                     else
@@ -91,6 +92,7 @@ public static class ProtoGen
                         if (msgIdDefine == null && isNetMessage) // 不然就不提示了
                         {
                             SLog.Error($"未找到MsgId: {protoMessage.Name}");
+                            continue;
                         }
                     }
 

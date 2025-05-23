@@ -48,11 +48,11 @@ public class HandlerGen
             return false;
 
         // 配置Type
-        if (config.Type != field.Index / 1000)
+        if (config.Type != field.Index / config.IdTypeDiv)
             return false;
 
         // 匹配前缀
-        if (config.Prefix.Length > 0 && !field.Name.StartsWith(config.Prefix))
+        if (!string.IsNullOrEmpty(config.Prefix) && config.Prefix.Length > 0 && !field.Name.StartsWith(config.Prefix))
             return false;
 
         return true;

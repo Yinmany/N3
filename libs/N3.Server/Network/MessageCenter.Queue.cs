@@ -38,6 +38,8 @@ public partial class MessageCenter
         Span<byte> head = stackalloc byte[8 + 4];
         BinaryPrimitives.WriteInt64LittleEndian(head, dstId);
         BinaryPrimitives.WriteInt32LittleEndian(head[8..], msg.MsgId);
+        buf.Write(head);
+
         ProtoBuf.Meta.RuntimeTypeModel.Default.Serialize(buf, msg);
         return buf;
     }

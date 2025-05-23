@@ -35,6 +35,7 @@ public partial class MessageCenter : IConnHandler
             Span<byte> head = stackalloc byte[2];
             _ = byteBuf.Read(head);
             conn.NetId = BinaryPrimitives.ReadUInt16LittleEndian(head);
+            SLog.Info($"[S] node connect: {conn.NetId} {conn.RemoteEndPoint}");
         }
         else
         {
@@ -69,6 +70,7 @@ public partial class MessageCenter : IConnHandler
                 {
                     IResponse rsp = MessageTypes.Ins.NewResponse(req);
                     rsp.ErrCode = RpcErrorCode.NotFoundTarget;
+                    rsp.ErrMsg = $"找不到消息接收者: {id}";
                     Ins.Send(tmpId, rsp);
                 }
 
@@ -106,9 +108,6 @@ public partial class MessageCenter : IConnHandler
         if (rsp.ErrCode < 0)
         {
             tcs.SetException(new RpcException(rsp.ErrCode, rsp.ErrMsg));
-        }
-        else
-        {
             return;
         }
 

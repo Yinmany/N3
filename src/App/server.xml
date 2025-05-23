@@ -17,7 +17,7 @@
 			<key name="listen" value="192.168.10.200:9000"/>
 		</server>
 
-		<server id="1" name="login" type="3">
+		<server id="3" name="login" type="3">
 			<key name="rdb" value="localhost:6379"/>
 			<key name="db" value="mongodb://127.0.0.1:27017/ys2_account"/>
 		</server>

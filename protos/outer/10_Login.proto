@@ -47,41 +47,12 @@ message HttpGetServerInfoRsp
   string LoginServer = 3; // 登录服地址
 }
 
-// 角色踢出消息
-message G2C_RoleKickoutMsg
-{
-  int32 reason = 1;
-}
-
-// 登录游戏服
-message C2G_RoleLoginCheckReq 
-{
-  string token = 1;
-}
-
-message C2G_RoleLoginCheckRsp 
-{
-  
-}
-
-// 角色登录请求
-message C2G_RoleLoginReq
-{
-  
-}
-
-message C2G_RoleLoginRsp
+message C2G_Login_GateReq
 {
 
 }
 
-// 进入场景请求
-message C2G_EnterSceneReq
+message C2G_Login_GateRsp
 {
-  int64 scene_id = 1;
-}
 
-message C2G_EnterSceneRsp
-{
-  int64 scene_id = 1; // 进入的场景id
 }

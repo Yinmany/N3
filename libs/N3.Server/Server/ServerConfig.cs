@@ -79,7 +79,7 @@ public class ServerConfig
     }
 
     /// <summary>
-    /// 根据服务器类型查找一个服务器配置
+    /// 根据服务器类型查找第一个匹配的服务器配置
     /// </summary>
     /// <param name="serverType"></param>
     /// <returns></returns>
