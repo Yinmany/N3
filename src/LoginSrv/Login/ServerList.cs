@@ -1,4 +1,4 @@
-﻿namespace N3.Login;
+﻿namespace ProjectX.Login;
 
 public class ServerList : Dictionary<string, ServerItem>
 {

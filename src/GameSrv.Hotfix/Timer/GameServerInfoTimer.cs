@@ -1,4 +1,6 @@
-﻿namespace N3;
+﻿using N3;
+
+namespace ProjectX;
 
 [Invokable(InvokeId.GameServerInfoTimer)]
 public class GameServerInfoTimer : ATimer<ServerApp>

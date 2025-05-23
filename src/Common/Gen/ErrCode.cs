@@ -1,5 +1,5 @@
 
-namespace N3
+namespace ProjectX
 {
     public static partial class ErrCode
     {

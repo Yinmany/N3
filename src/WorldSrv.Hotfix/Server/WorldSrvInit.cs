@@ -1,9 +1,10 @@
 ﻿using Cysharp.Threading.Tasks;
 using N3;
+using ProjectX;
 
 [assembly: ServerType(ServerType.World), ServerInit(typeof(WorldSrvInit))]
 
-namespace N3;
+namespace ProjectX;
 
 public class WorldSrvInit : IServerInit
 {

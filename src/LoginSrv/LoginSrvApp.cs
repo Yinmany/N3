@@ -1,7 +1,8 @@
 ﻿using NLog.Extensions.Logging;
-using N3.Login;
+using ProjectX.Login;
+using N3;
 
-namespace N3;
+namespace ProjectX;
 
 public class LoginSrvApp : ServerApp
 {

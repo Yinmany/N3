@@ -1,5 +1,7 @@
 ﻿
-namespace N3.Login;
+using N3;
+
+namespace ProjectX.Login;
 
 public class LoginMod : IAsyncDisposable
 {

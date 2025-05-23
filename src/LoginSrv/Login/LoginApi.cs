@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace N3.Login;
+namespace ProjectX.Login;
 
 [ApiController]
 [Route("api/[action]")]

@@ -1,4 +1,6 @@
-﻿namespace N3;
+﻿using N3;
+
+namespace ProjectX;
 
 public class NetSession(uint netId, Entity root) : Entity(netId, root)
 {

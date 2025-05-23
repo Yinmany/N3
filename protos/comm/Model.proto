@@ -1,8 +1,8 @@
 //@using System
 
 syntax = "proto3";
-package n3;
-option csharp_namespace = "N3";
+package projectx;
+option csharp_namespace = "ProjectX";
 
 // 角色外观数据
 message PbRoleAppearance

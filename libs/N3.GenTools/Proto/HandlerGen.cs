@@ -70,6 +70,9 @@ public class HandlerGen
         if (File.Exists(filePath))
             return;
 
+        if(!Directory.Exists(config.Out))
+            Directory.CreateDirectory(config.Out);
+
         // 消息
         string finalCodes;
         HandlerGenData data = new HandlerGenData();

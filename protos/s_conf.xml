@@ -10,7 +10,7 @@
     <enum in="./error_code.xml" out="${srv_proto_dir}" tpl="Tpl/enum_cs.tpl" />
 
     <!-- 生成消息处理器 -->
-    <handler namespace="N3.Protocol" tpl="Tpl/handler_cs" msg_id="./outer/MsgId.proto" using="N3;Cysharp.Threading.Tasks">
+    <!-- <handler namespace="ProjectX.Protocol" tpl="Tpl/handler_cs" msg_id="./outer/MsgId.proto" using="N3;Cysharp.Threading.Tasks">
         <gen type="100" prefix="C2G_" ctx_type="NetSession" out="${srv_dir}/GameSrv.Hotfix/Protocol/Login" />
-    </handler>
+    </handler> -->
 </conf>

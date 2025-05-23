@@ -3,14 +3,14 @@ using N3;
 using System.Collections.Generic;
 using System;
 
-namespace N3
+namespace ProjectX
 {
     
     /// <summary> 角色基础数据消息 </summary>
     [ProtoContract]
     public partial class G2C_Role_InfoMsg : IMessage
     {
-        public const int _MsgId_ = (int)N3.MsgId.G2C_Role_InfoMsg;
+        public const int _MsgId_ = (int)ProjectX.MsgId.G2C_Role_InfoMsg;
         public int MsgId => _MsgId_;
     
         /// <summary> 角色id </summary>

@@ -1,4 +1,4 @@
-﻿namespace N3;
+﻿namespace ProjectX;
 
 public static class ServerType
 {
