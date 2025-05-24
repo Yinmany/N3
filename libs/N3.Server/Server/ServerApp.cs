@@ -46,9 +46,7 @@ public class ServerApp : Entity
                 if (_isDisposed)
                     return;
 
-                UniTask? task = TypeManager.Ins.Get(ServeType)?.Init?.OnUnInit(this);
-                if (task != null)
-                    await task.Value;
+                await OnShutdownAsync();
                 tcs.SetResult();
             }
             catch (Exception e)
@@ -61,6 +59,13 @@ public class ServerApp : Entity
             }
         }, null);
         return tcs.Task;
+    }
+
+    protected virtual async Task OnShutdownAsync()
+    {
+        UniTask? task = TypeManager.Ins.Get(ServeType)?.Init?.OnUnInit(this);
+        if (task != null)
+            await task.Value;
     }
 
     private void Dispose()

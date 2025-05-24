@@ -1,14 +1,19 @@
 ﻿using NLog.Extensions.Logging;
 using ProjectX.Login;
 using N3;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ProjectX;
 
-public class LoginSrvApp : ServerApp
+public class LoginServer : ServerApp
 {
     private readonly Task _waitShutdownTask;
 
-    public LoginSrvApp(ushort serverId, ushort serverType, string name) : base(serverId, serverType, name)
+    public LoginServer(ushort serverId, ushort serverType, string name) : base(serverId, serverType, name)
     {
         // 创建web服务器
         var builder = WebApplication.CreateBuilder(Environment.GetCommandLineArgs());
@@ -61,9 +66,9 @@ public class LoginSrvApp : ServerApp
         return 0;
     }
 
-    public async Task WaitForShutdownAsync()
+    protected override async Task OnShutdownAsync()
     {
         await _waitShutdownTask;
-        await base.Shutdown();
+        await base.OnShutdownAsync();
     }
 }

@@ -11,7 +11,9 @@ public class GameSrvInit : IServerInit
 {
     public async UniTask OnInit(ServerApp app)
     {
-        SLog.Info("OnInit");
+        GameServer gs = (GameServer)app;
+
+        //SLog.Info("OnInit");
         //ServerConfig? serverConfig = ServerConfig.GetConfig(Did.LocalNodeId, app.ServerId);
         //if (serverConfig is null)
         //{
@@ -26,12 +28,13 @@ public class GameSrvInit : IServerInit
         //    return;
         //}
 
+        // game server 全局组件
         app.AddComp(new ActorComp());
-        ClusterComp cluster = app.AddComp(new ClusterComp());
-        await cluster.RegisterAsync();
+        app.AddComp(new ClusterComp());
 
-        EventSystem eventSystem = app.GetComp<EventSystem>();
-        eventSystem.AddInterval(TimeSpan.FromSeconds(5), InvokeId.GameServerInfoTimer, app);
+        gs.Cluster.Init();
+
+        gs.Event.AddInterval(TimeSpan.FromSeconds(5), InvokeId.GameServerInfoTimer, app);
     }
 
     public UniTask OnUnInit(ServerApp app)

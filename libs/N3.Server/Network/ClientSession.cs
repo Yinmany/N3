@@ -40,6 +40,13 @@ public partial class MessageCenter
 
         public void ChangeIp(IPEndPoint ip)
         {
+            //if (_ip == ip)
+            //    return;
+
+            if (ip.ToString() == _ip.ToString())
+                return;
+
+            logger.Info($"node ip change {_nodeId} {_ip} => {ip}");
             _ip = ip;
         }
 

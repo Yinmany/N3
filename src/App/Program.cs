@@ -26,7 +26,7 @@ try
 
     // 是否存在登录服
     bool isLoginSrv = list.Any(x => x.Type == ServerType.Login);
-    if (isLoginSrv && LoginSrvApp.CheckServerConfig() != 0)
+    if (isLoginSrv && LoginServer.CheckServerConfig() != 0)
         return;
     if (isLoginSrv)
     {
@@ -46,33 +46,34 @@ try
 
     AssemblyPartManager.Ins
         .AddPart(typeof(MsgId).Assembly)
-        .AddHotfixPart("GameSrv.Hotfix")
         .AddHotfixPart("WorldSrv.Hotfix")
+        .AddHotfixPart("GameSrv.Hotfix")
+        .AddHotfixPart("GateSrv.Hotfix")
         .EnableWatch(false)
         .Load();
 
-    //  添加本地节点
+    //  本地节点Listen
     IPEndPoint? localNodeBindIp = ServerConfig.GetNodeIp(nodeId);
     if (localNodeBindIp != null)
         MessageCenter.Ins.Listen(localNodeBindIp);
 
-    // 注册中心服节点
-    RegisterWorldSrvNode();
-
     foreach (var cfg in list)
     {
-        if (cfg.Type == ServerType.Login)
+        ServerApp? app = null;
+        app = cfg.Type switch
         {
-            LoginSrvApp app = new LoginSrvApp(cfg.Id, cfg.Type, cfg.Name);
-            PosixSignalHook.Ins.AddStopCallback(app.WaitForShutdownAsync);
-        }
-        else
-        {
-            ServerApp app = new ServerApp(cfg.Id, cfg.Type, cfg.Name);
-            PosixSignalHook.Ins.AddStopCallback(app.Shutdown);
-        }
+            ServerType.World => new WorldServer(cfg.Id, cfg.Type, cfg.Name),
+            ServerType.Game => new GameServer(cfg.Id, cfg.Type, cfg.Name),
+            ServerType.Gate => new GateServer(cfg.Id, cfg.Type, cfg.Name),
+            ServerType.Login => new LoginServer(cfg.Id, cfg.Type, cfg.Name),
+            _ => new ServerApp(cfg.Id, cfg.Type, cfg.Name),
+        };
 
-        SLog.Info($"创建ServerApp: {cfg.Id} {cfg.Type} {cfg.Name} {Did.Make(cfg.Id, ServerConfig.LocalNodeId)}");
+        if (app != null)
+        {
+            PosixSignalHook.Ins.AddStopCallback(app.Shutdown);
+            SLog.Info($"创建ServerApp: {cfg.Id} {cfg.Type} {cfg.Name} {Did.Make(cfg.Id, ServerConfig.LocalNodeId)}");
+        }
     }
 
     await PosixSignalHook.Ins.WaitForExitAsync();
@@ -92,23 +93,3 @@ void UniTaskScheduler_UnobservedTaskException(Exception obj)
     SLog.Error(obj, "UnobservedTaskException");
 }
 
-void RegisterWorldSrvNode()
-{
-    // 注册中心服
-    ServerConfig? worldConfig = ServerConfig.FindOneByServerType(ServerType.World);
-    if (worldConfig is null)
-    {
-        SLog.Error("world server not found");
-        return;
-    }
-
-    IPEndPoint? worldIp = ServerConfig.GetNodeIp(worldConfig.NodeId);
-    if (worldIp is null)
-    {
-        SLog.Error("world server ip not found");
-        return;
-    }
-
-    MessageCenter.Ins.AddNode(worldConfig.NodeId, worldIp);
-    SLog.Info($"注册中心服: {worldConfig.NodeId}, {worldIp}");
-}

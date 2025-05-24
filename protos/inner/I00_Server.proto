@@ -3,21 +3,25 @@
 syntax = "proto3";
 option csharp_namespace = "ProjectX";
 
-message A2W_SD_AddReq 
+message PbServerInfo
 {
   uint32 nodeId = 1;
   string nodeIp = 2;
   uint32 srvType = 3;
+  int64  actorId = 4;
 }
 
-message A2W_SD_AddRsp 
+message A2W_Server_AddReq 
+{
+  PbServerInfo serverInfo = 1;
+}
+
+message A2W_Server_AddRsp 
 {
 
 }
 
-message W2A_SD_AddMsg
+message W2A_Server_AddMsg
 {
-  uint32 nodeId = 1;
-  string nodeIp = 2;
-  uint32 srvType = 3;
+  PbServerInfo serverInfo = 1;
 }

@@ -13,11 +13,14 @@
 			<key name="xxx" value="xxx"/>
 		</server>
 
-		<server id="2" name="game-1" type="2">
+		<server id="2" name="game" type="2">
+		</server>
+
+		<server id="3" name="gate" type="3">
 			<key name="listen" value="192.168.10.200:9000"/>
 		</server>
 
-		<server id="3" name="login" type="4">
+		<server id="4" name="login" type="4">
 			<key name="rdb" value="localhost:6379"/>
 			<key name="db" value="mongodb://127.0.0.1:27017/ys2_account"/>
 		</server>

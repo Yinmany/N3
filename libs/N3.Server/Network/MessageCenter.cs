@@ -136,7 +136,6 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         {
             if (_sessions.TryGetValue(nodeId, out var session))
             {
-                logger.Info($"node ip change {nodeId} {ip}");
                 session.ChangeIp(ip);
             }
             else

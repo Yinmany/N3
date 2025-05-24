@@ -1,35 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\GameSrv.Hotfix\GameSrv.Hotfix.csproj" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="..\GameSrv\GameSrv.csproj" />
-        <ProjectReference Include="..\LoginSrv\LoginSrv.csproj" />
-        <ProjectReference Include="..\WorldSrv.Hotfix\WorldSrv.Hotfix.csproj" ReferenceOutputAssembly="false" />
-        <ProjectReference Include="..\WorldSrv\WorldSrv.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\GameSrv.Hotfix\GameSrv.Hotfix.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\GameSrv\GameSrv.csproj" />
+		<ProjectReference Include="..\GateSrv\GateSrv.csproj" />
+		<ProjectReference Include="..\GateSrv.Hotfix\GateSrv.Hotfix.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\LoginSrv\LoginSrv.csproj" />
+		<ProjectReference Include="..\WorldSrv.Hotfix\WorldSrv.Hotfix.csproj" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\WorldSrv\WorldSrv.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-        <PackageReference Include="NLog.Extensions.Logging" Version="5.3.15" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="5.3.15" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <None Update="NLog.config">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="login-conf.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="server.xml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
+	<ItemGroup>
+		<None Update="NLog.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="login-conf.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="server.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>
