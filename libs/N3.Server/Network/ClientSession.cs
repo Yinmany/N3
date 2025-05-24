@@ -75,13 +75,13 @@ public partial class MessageCenter
                 SendNodeInfo();
 
                 await _conn.ConnectAsync();
-                SLog.Info($"[C] node connect: dst {this._nodeId} {_ip}");
+                logger.Info($"connect to server: dst {this._nodeId} {_ip}");
                 _conn.Start();
             }
             catch (Exception e)
             {
                 // 连接失败
-                SLog.Error(e, $"连接Node失败: {this._ip}");
+                logger.Error(e, $"connect to server fail: {this._nodeId} {this._ip}");
                 _conn.Dispose();
                 RpcCallbackDisconnectError();
             }

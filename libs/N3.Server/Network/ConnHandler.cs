@@ -35,7 +35,7 @@ public partial class MessageCenter : IConnHandler
             Span<byte> head = stackalloc byte[2];
             _ = byteBuf.Read(head);
             conn.NetId = BinaryPrimitives.ReadUInt16LittleEndian(head);
-            SLog.Info($"[S] node connect: {conn.NetId} {conn.RemoteEndPoint}");
+            logger.Info($"connect from client: {conn.NetId} {conn.RemoteEndPoint}");
         }
         else
         {
@@ -52,7 +52,7 @@ public partial class MessageCenter : IConnHandler
             Type? msgType = MessageTypes.Ins.GetById(msgId);
             if (msgType is null)
             {
-                SLog.Error($"找不到消息类型:msgId={msgId} id={id}");
+                logger.Error($"找不到消息类型:msgId={msgId} id={id}");
                 return;
             }
 
@@ -65,7 +65,7 @@ public partial class MessageCenter : IConnHandler
 
             if (!_receivers.TryGetValue(id, out var receiver))
             {
-                SLog.Error($"找不到消息接收者:msgId={msgId} id={id}");
+                logger.Error($"找不到消息接收者:msgId={msgId} id={id}");
                 if (msg is IRequest req)
                 {
                     IResponse rsp = MessageTypes.Ins.NewResponse(req);
@@ -116,7 +116,7 @@ public partial class MessageCenter : IConnHandler
         long ms = STime.NowMs - sendTime; // rpc请求耗时
         if (ms > 300)
         {
-            SLog.Warn($"rpc耗时 > 300ms: {req.GetType().Name}->{rsp.GetType().Name} {ms}ms nodeId={nodeId}");
+            logger.Warn($"rpc耗时 > 300ms: {req.GetType().Name} -> {rsp.GetType().Name} {ms}ms nodeId={nodeId}");
         }
     }
 

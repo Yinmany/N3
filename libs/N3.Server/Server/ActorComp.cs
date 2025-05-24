@@ -75,7 +75,9 @@ public class ActorComp : AComponent, IMessageReceiver
 
     private static bool OnReply(uint netId, IResponse rsp)
     {
-        return true;
+        // netId 实际是nodeId
+        ushort nodeId = (ushort)netId;
+        return MessageCenter.Ins.Send(Did.Make(0, nodeId), rsp);
     }
 
     public void OnUnsafeReceive(ushort fromNodeId, IMessage message)

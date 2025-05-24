@@ -67,6 +67,8 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     private int _rpcIdGen = 0;
     private int _doWorking = 0;
 
+    private static SLogger logger = new SLogger(nameof(MessageCenter));
+
     private MessageCenter()
     {
         _rspCallback = OnResponse;
@@ -76,7 +78,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
 
     public void Listen(IPEndPoint bindIp)
     {
-        SLog.Info($"listen {bindIp}...");
+        logger.Info($"listen {bindIp}...");
         TcpConnListener listener = new TcpConnListener(_socketSchedulers);
         listener.Listen(bindIp.Port, bindIp.Address);
         _ = RunAsync(_shutdownCts.Token);
@@ -134,12 +136,12 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         {
             if (_sessions.TryGetValue(nodeId, out var session))
             {
-                SLog.Info($"node ip change {nodeId} {ip}");
+                logger.Info($"node ip change {nodeId} {ip}");
                 session.ChangeIp(ip);
             }
             else
             {
-                SLog.Info($"add node {nodeId} {ip}");
+                logger.Info($"add node {nodeId} {ip}");
                 _sessions.Add(nodeId, new ClientSession(nodeId, ip, _socketSchedulers.GetScheduler(), OnRpcError, this));
             }
         }, null);
@@ -152,7 +154,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
             if (!_sessions.Remove(id, out var session))
                 return;
 
-            SLog.Info($"remove node {id}");
+            logger.Info($"remove node {id}");
             if (disconnect)
             {
                 session.Dispose();
@@ -211,7 +213,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
 
     public ValueTask<IResponse> Call(long id, IRequest req, short timeout = 60)
     {
-        Did idInfo = _rpcIdGen;
+        Did idInfo = id;
         ResponseTcs tcs = ResponseTcs.Create(req, idInfo.NodeId, timeout);
         PostSendQueue(id, tcs);
         return tcs.Task;

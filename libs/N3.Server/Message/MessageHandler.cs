@@ -7,7 +7,7 @@ public sealed class MessageHandlerAttribute : Attribute
 {
 }
 
-internal interface IMsgHandlerBase
+public interface IMsgHandlerBase
 {
     int MsgId { get; }
 }
@@ -46,7 +46,10 @@ public abstract class ReqHandler<T, TReq, TResult> : IReqHandler where TReq : IR
         }
     }
 
-    public UniTask Invoke(object self, IRequest req, RpcReplyAction reply, uint netId) => On((T)self, (TReq)req, new Reply(reply, req.RpcId, netId));
+    public UniTask Invoke(object self, IRequest req, RpcReplyAction reply, uint netId)
+    {
+        return On((T)self, (TReq)req, new Reply(reply, req.RpcId, netId));
+    }
 
     protected abstract UniTask On(T self, TReq req, Reply reply);
 }

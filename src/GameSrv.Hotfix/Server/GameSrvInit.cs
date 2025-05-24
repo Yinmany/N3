@@ -30,12 +30,8 @@ public class GameSrvInit : IServerInit
         ClusterComp cluster = app.AddComp(new ClusterComp());
         await cluster.RegisterAsync();
 
-        
-
-
         EventSystem eventSystem = app.GetComp<EventSystem>();
         eventSystem.AddInterval(TimeSpan.FromSeconds(5), InvokeId.GameServerInfoTimer, app);
-
     }
 
     public UniTask OnUnInit(ServerApp app)

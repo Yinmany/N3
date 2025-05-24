@@ -7,7 +7,10 @@ public class NLogAdapter : N3.ILogger
 
     static NLogAdapter()
     {
-        LogManager.Setup().SetupExtensions(s => { s.RegisterLayoutRenderer<ColoredConsoleLayout>(); });
+        LogManager.Setup().SetupExtensions(s =>
+        {
+            s.RegisterLayoutRenderer<ColoredConsoleLayout>();
+        });
     }
 
     public NLogAdapter(string name)
