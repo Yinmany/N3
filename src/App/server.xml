@@ -7,7 +7,7 @@
 		<key name="db" value="mongodb://127.0.0.1:27017/ys2_game"/>
 	</config>
 
-	<!--  server配置: id=节点id type=1.world 2.game 3.login -->
+	<!--  server配置: id=节点id type=1.world 2.game 3.gate 4.login -->
 	<node id="1" listen="127.0.0.1:10001">
 		<server id="1" name="world" type="1">
 			<key name="xxx" value="xxx"/>
@@ -27,11 +27,11 @@
 	</node>
 
 	<!--  登录服节点  -->
-	<node id="300" listen="127.0.0.1:10300">
+	<!--<node id="300" listen="127.0.0.1:10300">
 		<server id="1" name="login" type="3">
 			<key name="rdb" value="localhost:6379"/>
 			<key name="db" value="mongodb://127.0.0.1:27017/ys2_account"/>
 		</server>
-	</node>
+	</node>-->
 
 </conf>

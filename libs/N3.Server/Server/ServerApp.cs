@@ -46,7 +46,7 @@ public class ServerApp : Entity
                 if (_isDisposed)
                     return;
 
-                await OnShutdownAsync();
+                await OnStopAsync();
                 tcs.SetResult();
             }
             catch (Exception e)
@@ -61,7 +61,12 @@ public class ServerApp : Entity
         return tcs.Task;
     }
 
-    protected virtual async Task OnShutdownAsync()
+    protected virtual void OnStart()
+    {
+        TypeManager.Ins.Get(ServeType)?.Init?.OnInit(this).Forget();
+    }
+
+    protected virtual async Task OnStopAsync()
     {
         UniTask? task = TypeManager.Ins.Get(ServeType)?.Init?.OnUnInit(this);
         if (task != null)
@@ -82,7 +87,10 @@ public class ServerApp : Entity
     private void Init()
     {
         // 初始化invoke
-        _workQueue.PostNext(_ => { TypeManager.Ins.Get(ServeType)?.Init?.OnInit(this).Forget(); }, null);
+        _workQueue.PostNext(_ =>
+        {
+            OnStart();
+        }, null);
     }
 
     private void Run()

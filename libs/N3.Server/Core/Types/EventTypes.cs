@@ -149,4 +149,36 @@ internal class EventTypes
     {
         UpdateList.Sort(new UpdateItemComparer());
     }
+
+    internal void Add(EventTypes e)
+    {
+        this.UpdateList.AddRange(e.UpdateList);
+
+        foreach (var item in e.EventMap)
+        {
+            if (this.EventMap.TryGetValue(item.Key, out List<object>? v))
+            {
+                v.AddRange(item.Value);
+            }
+            else
+            {
+                this.EventMap.Add(item.Key, item.Value);
+            }
+        }
+
+        foreach (var item in e.InvokableMap)
+        {
+            this.InvokableMap.TryAdd(item.Key, item.Value);
+        }
+
+        foreach (var item in e.InvokableMap2)
+        {
+            this.InvokableMap2.TryAdd(item.Key, item.Value);
+        }
+
+        foreach (var item in e.Handler)
+        {
+            this.Handler.TryAdd(item.Key, item.Value);
+        }
+    }
 }

@@ -11,9 +11,9 @@ enum InnerMsgId {
   None = 0;
 
   // 服务发现
-  A2W_Server_AddReq = 0001;
-  A2W_Server_AddRsp = 0002;
-  W2A_Server_AddMsg = 0003;
+  A2W_Server_AppReq = 0001;
+  A2W_Server_AppRsp = 0002;
+  W2A_Server_AppMsg = 0003;
 
   // 内部使用
   // L2W_LoginReq = 1001;

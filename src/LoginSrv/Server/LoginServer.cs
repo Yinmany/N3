@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectX;
+
+[assembly: ServerType(ServerType.Login)]
 
 namespace ProjectX;
 
@@ -66,9 +69,16 @@ public class LoginServer : ServerApp
         return 0;
     }
 
-    protected override async Task OnShutdownAsync()
+    protected override void OnStart()
+    {
+        this.AddComp(new ActorComp());
+        ClusterComp clusterComp = this.AddComp(new ClusterComp());
+        clusterComp.Init();
+    }
+
+    protected override async Task OnStopAsync()
     {
         await _waitShutdownTask;
-        await base.OnShutdownAsync();
+        await base.OnStopAsync();
     }
 }

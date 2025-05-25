@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using MongoDB.Bson;
-using MongoDB.Driver;
 using N3;
 using System.Net;
 
@@ -52,12 +51,11 @@ public class ClusterComp : AComponent
         };
 
         //logger.Info($"正在注册: {serverInfo.ToJson()}...");
-        A2W_Server_AddRsp rsp = await Call<A2W_Server_AddRsp>(_worldServerActorId, new A2W_Server_AddReq { ServerInfo = serverInfo });
+        A2W_Server_AppRsp rsp = await Call<A2W_Server_AppRsp>(_worldServerActorId, new A2W_Server_AppReq { ServerInfo = serverInfo, Op = 1 });
         //logger.Info($"注册成功: {serverInfo.ToJson()}...ok!");
     }
 
-
-    public void AddServerInfo(PbServerInfo serverInfo)
+    private void AddServerInfo(PbServerInfo serverInfo)
     {
         if (!_infos.TryGetValue(serverInfo.SrvType, out List<PbServerInfo>? list))
         {
@@ -70,7 +68,8 @@ public class ClusterComp : AComponent
 
         if (this.IsMaster)
         {
-            W2A_Server_AddMsg addMsg = new W2A_Server_AddMsg();
+            W2A_Server_AppMsg addMsg = new W2A_Server_AppMsg();
+            addMsg.Op = 1;
             addMsg.ServerInfo = serverInfo;
             foreach (var kv in _infos)
             {
@@ -82,9 +81,21 @@ public class ClusterComp : AComponent
                         continue;
 
                     Send(info.ActorId, addMsg);
-                    Send(serverInfo.ActorId, new W2A_Server_AddMsg { ServerInfo = info });
+                    Send(serverInfo.ActorId, new W2A_Server_AppMsg { ServerInfo = info, Op = 1 });
                 }
             }
+        }
+    }
+
+    public void ServerInfoChanged(PbServerInfo serverInfo, int op)
+    {
+        if (op == 1)
+        {
+            this.AddServerInfo(serverInfo);
+        }
+        else // 移除
+        {
+
         }
     }
 

@@ -7,9 +7,9 @@ namespace ProjectX
     public enum InnerMsgId
     {
         None = 0,
-        A2W_Server_AddReq = 1,
-        A2W_Server_AddRsp = 2,
-        W2A_Server_AddMsg = 3,
+        A2W_Server_AppReq = 1,
+        A2W_Server_AppRsp = 2,
+        W2A_Server_AppMsg = 3,
     }
     
 }

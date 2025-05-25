@@ -11,17 +11,18 @@ message PbServerInfo
   int64  actorId = 4;
 }
 
-message A2W_Server_AddReq 
+message A2W_Server_AppReq 
 {
   PbServerInfo serverInfo = 1;
+  int32 op = 2; // 1=add 2=remote
 }
 
-message A2W_Server_AddRsp 
+message A2W_Server_AppRsp 
 {
-
 }
 
-message W2A_Server_AddMsg
+message W2A_Server_AppMsg
 {
   PbServerInfo serverInfo = 1;
+  int32 op = 2; // 1=add 2=remote
 }

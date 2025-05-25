@@ -46,6 +46,7 @@ try
 
     AssemblyPartManager.Ins
         .AddPart(typeof(MsgId).Assembly)
+        .AddPart(typeof(LoginServer).Assembly)
         .AddHotfixPart("WorldSrv.Hotfix")
         .AddHotfixPart("GameSrv.Hotfix")
         .AddHotfixPart("GateSrv.Hotfix")
