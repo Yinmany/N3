@@ -63,6 +63,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     private readonly SendOrPostCallback _rspCallback;
     private readonly SendOrPostCallback _timeoutCheckCallback;
     private readonly List<DisconnectSubscribe> _disconnectSubscribes = new List<DisconnectSubscribe>();
+    private readonly RpcTimeoutQueue _innerTimeoutQueue;
 
     private int _rpcIdGen = 0;
     private int _doWorking = 0;
@@ -73,6 +74,8 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     {
         _rspCallback = OnResponse;
         _timeoutCheckCallback = OnTimeoutCheck;
+        _innerTimeoutQueue = new RpcTimeoutQueue(_callbacks);
+
         TimerMgr.Ins.AddInterval(TimeSpan.FromSeconds(5), OnTimeout);
     }
 
@@ -105,21 +108,14 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         return session;
     }
 
-    private void OnRpcError(int rpcId, RpcException e)
-    {
-        if (_callbacks.TryGetValue(rpcId, out var tcs))
-        {
-            tcs.SetException(e);
-        }
-    }
-
     private void OnTimeout(TimerInfo handle) => Post(_timeoutCheckCallback, null);
 
     private void OnTimeoutCheck(object? state)
     {
+        _innerTimeoutQueue.CheckTimeout();
         foreach (var s in _sessions.Values)
         {
-            s.CheckTimeout();
+            s.timeoutQueue.CheckTimeout();
         }
     }
 
@@ -141,7 +137,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
             else
             {
                 logger.Info($"add node {nodeId} {ip}");
-                _sessions.Add(nodeId, new ClientSession(nodeId, ip, _socketSchedulers.GetScheduler(), OnRpcError, this));
+                _sessions.Add(nodeId, new ClientSession(nodeId, ip, _socketSchedulers.GetScheduler(), this, this._callbacks));
             }
         }, null);
     }

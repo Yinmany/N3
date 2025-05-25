@@ -48,40 +48,70 @@ public partial class MessageCenter
     {
         while (_sendQueue.TryDequeue(out var item))
         {
-            Did tmpId = item.Item1;
-            Did id = new Did(tmpId.Time, Did.LocalNodeId, tmpId.Seq); // 反转一下nodeId
+            Did dstId = item.Item1;
             object sendItem = item.Item2;
 
-            ClientSession? session = GetSession(id.NodeId);
-            if (sendItem is IMessage msg)
+            // 进程内发送
+            if (dstId.NodeId == Did.LocalNodeId)
             {
-                if (session is null)
-                    continue;
-                ByteBuf byteBuf = Serialize(id, msg);
-                session.Send(byteBuf);
+                InnerSend(dstId, sendItem);
             }
             else
             {
-                ResponseTcs tcs = (ResponseTcs)sendItem;
-                if (session is null)
-                {
-                    tcs.SetException(RpcException.NotFoundNode);
-                    continue;
-                }
-
-                OnSendReq(id, session, tcs);
+                Did id = new Did(dstId.Time, Did.LocalNodeId, dstId.Seq); // 反转一下nodeId
+                OuterSend(dstId.NodeId, id, sendItem);
             }
         }
+    }
 
-        return;
-
-        void OnSendReq(in Did id, ClientSession session, ResponseTcs tcs)
+    private void InnerSend(Did dstId, object sendItem)
+    {
+        if (sendItem is IMessage msg)
         {
+            this.OnMessage(msg, dstId, Did.LocalNodeId);
+        }
+        else
+        {
+            ResponseTcs tcs = (ResponseTcs)sendItem;
             IRequest req = tcs.Request;
             int rpcId = ++_rpcIdGen;
             req.RpcId = rpcId;
 
-            ByteBuf byteBuf = Serialize(id, req);
+            if (!_callbacks.TryAdd(rpcId, tcs))
+            {
+                tcs.SetException(RpcException.DuplicateRpcId);
+                return;
+            }
+
+            _innerTimeoutQueue.Enqueue(rpcId, tcs.Timeout);
+            this.OnMessage(req, dstId, Did.LocalNodeId);
+        }
+    }
+
+    private void OuterSend(ushort dstNodeId, Did dstId, object sendItem)
+    {
+        ClientSession? session = GetSession(dstNodeId);
+        if (sendItem is IMessage msg)
+        {
+            if (session is null)
+                return;
+            ByteBuf byteBuf = Serialize(dstId, msg);
+            session.Send(byteBuf);
+        }
+        else
+        {
+            ResponseTcs tcs = (ResponseTcs)sendItem;
+            if (session is null)
+            {
+                tcs.SetException(RpcException.NotFoundNode);
+                return;
+            }
+
+            IRequest req = tcs.Request;
+            int rpcId = ++_rpcIdGen;
+            req.RpcId = rpcId;
+
+            ByteBuf byteBuf = Serialize(dstId, req);
             if (!session.Send(byteBuf))
             {
                 tcs.SetException(RpcException.Disconnect);
@@ -94,7 +124,7 @@ public partial class MessageCenter
                 return;
             }
 
-            session.AddTimeout(rpcId, tcs.Timeout);
+            session.timeoutQueue.Enqueue(rpcId, tcs.Timeout);
         }
     }
 

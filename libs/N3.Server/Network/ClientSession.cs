@@ -9,40 +9,26 @@ public partial class MessageCenter
 {
     class ClientSession : IDisposable
     {
-        private readonly Queue<(int, long)> _timeoutQueue = new();
+        public readonly RpcTimeoutQueue timeoutQueue;
         private readonly ushort _nodeId;
         private readonly IOQueue _ioQueue;
-        private readonly Action<int, RpcException> _rpcErrCallback;
+
         private readonly IConnHandler connHandler;
         private TcpConn _conn;
         private IPEndPoint _ip;
 
-        public ClientSession(ushort nodeId, IPEndPoint ip, IOQueue ioQueue, Action<int, RpcException> rpcErrCallback, IConnHandler connHandler)
+        public ClientSession(ushort nodeId, IPEndPoint ip, IOQueue ioQueue, IConnHandler connHandler, IReadOnlyDictionary<int, ResponseTcs> rpcCallback)
         {
             _nodeId = nodeId;
             _ip = ip;
             _ioQueue = ioQueue;
-            _rpcErrCallback = rpcErrCallback;
             this.connHandler = connHandler;
+            timeoutQueue = new RpcTimeoutQueue(rpcCallback);
             //_ = Connect();
-        }
-
-        public void CheckTimeout()
-        {
-            while (_timeoutQueue.TryPeek(out var item))
-            {
-                if (item.Item2 > STime.NowMs)
-                    break;
-                _timeoutQueue.Dequeue();
-                _rpcErrCallback(item.Item1, RpcException.Timeout);
-            }
         }
 
         public void ChangeIp(IPEndPoint ip)
         {
-            //if (_ip == ip)
-            //    return;
-
             if (ip.ToString() == _ip.ToString())
                 return;
 
@@ -57,20 +43,9 @@ public partial class MessageCenter
             return _conn!.Send(buf);
         }
 
-        public void AddTimeout(int rpcId, short timeout)
-        {
-            if (timeout < 0)
-                return;
-            _timeoutQueue.Enqueue((rpcId, STime.NowMs + timeout * 1000)); // 只有发送了的，才会进入超时列表
-        }
-
         public void RpcCallbackDisconnectError()
         {
-            // 清理一下rpc回调
-            while (_timeoutQueue.TryDequeue(out var val))
-            {
-                _rpcErrCallback(val.Item1, RpcException.Disconnect);
-            }
+            timeoutQueue.Clear(RpcException.Disconnect);
         }
 
         private async Task Connect()

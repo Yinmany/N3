@@ -57,30 +57,34 @@ public partial class MessageCenter : IConnHandler
             }
 
             IMessage msg = (IMessage)ProtoBuf.Meta.RuntimeTypeModel.Default.Deserialize(byteBuf, null, msgType);
-            if (msg is IResponse resp)
-            {
-                Post(_rspCallback, resp);
-                return;
-            }
-
-            if (!_receivers.TryGetValue(id, out var receiver))
-            {
-                logger.Error($"找不到消息接收者:msgId={msgId} id={id}");
-                if (msg is IRequest req)
-                {
-                    IResponse rsp = MessageTypes.Ins.NewResponse(req);
-                    rsp.ErrCode = RpcErrorCode.NotFoundTarget;
-                    rsp.ErrMsg = $"找不到消息接收者: {id}";
-                    Ins.Send(tmpId, rsp);
-                }
-
-                return;
-            }
-
-            receiver.OnUnsafeReceive(fromNodeId, msg);
+            OnMessage(msg, id, fromNodeId);
         }
     }
 
+    private void OnMessage(IMessage msg, Did id, ushort fromNodeId)
+    {
+        if (msg is IResponse resp)
+        {
+            Post(_rspCallback, resp);
+            return;
+        }
+
+        if (!_receivers.TryGetValue(id, out var receiver))
+        {
+            logger.Error($"找不到消息接收者:msgId={msg.MsgId} id={id}");
+            if (msg is IRequest req)
+            {
+                IResponse rsp = MessageTypes.Ins.NewResponse(req);
+                rsp.ErrCode = RpcErrorCode.NotFoundTarget;
+                rsp.ErrMsg = $"找不到消息接收者: {id}";
+                Ins.Send(Did.Make(0, fromNodeId), rsp); // 回给发送方
+            }
+
+            return;
+        }
+
+        receiver.OnUnsafeReceive(fromNodeId, msg);
+    }
 
     public void OnDisconnected(TcpConn conn)
     {

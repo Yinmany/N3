@@ -36,40 +36,53 @@ public class ActorComp : AComponent, IMessageReceiver
             {
                 ushort fromNodeId = item.Item1;
                 IMessage msg = item.Item2;
-
-                UniTask task;
-                if (msg is IRequest req)
-                {
-                    try
-                    {
-                        task = _eventSystem.Dispatch(this.Entity, req, ReplyAction, fromNodeId);
-                    }
-                    catch (Exception e)
-                    {
-                        IResponse rsp = MessageTypes.Ins.NewResponse(req);
-                        rsp.ErrCode = RpcErrorCode.Exception;
-                        rsp.ErrMsg = e.Message;
-                        ReplyAction(fromNodeId, rsp);
-                        SLog.Error(e, "处理Req异常:");
-                        continue;
-                    }
-                }
-                else
-                {
-                    task = _eventSystem.Dispatch(this.Entity, msg);
-                }
-
-                if (IsReentrant)
-                {
-                    task.Forget();
-                }
-                else
-                {
-                    await task;
-                }
+                await this.Dispatch(msg, fromNodeId);
             }
 
             await _signal.WaitAsync();
+        }
+    }
+
+    private UniTask Dispatch(IMessage msg, ushort fromNodeId)
+    {
+        UniTask task;
+        if (msg is IRequest req)
+        {
+            try
+            {
+                task = _eventSystem.Dispatch(this.Entity, req, ReplyAction, fromNodeId);
+            }
+            catch (Exception e)
+            {
+                IResponse rsp = MessageTypes.Ins.NewResponse(req);
+                rsp.ErrCode = RpcErrorCode.Exception;
+                rsp.ErrMsg = e.Message;
+                ReplyAction(fromNodeId, rsp);
+                SLog.Error(e, "处理Req异常:");
+                return UniTask.CompletedTask;
+            }
+        }
+        else
+        {
+            try
+            {
+                task = _eventSystem.Dispatch(this.Entity, msg);
+            }
+            catch (Exception e)
+            {
+                SLog.Error(e, "处理Msg异常:");
+                return UniTask.CompletedTask;
+            }
+        }
+
+        if (IsReentrant)
+        {
+            task.Forget();
+            return UniTask.CompletedTask;
+        }
+        else
+        {
+            return task;
         }
     }
 
