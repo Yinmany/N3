@@ -9,7 +9,7 @@ namespace ProjectX;
 
 public class GameServer : ServerApp
 {
-    public ClusterComp Cluster => GetComp<ClusterComp>();
+    public ServerDiscover Cluster => GetComp<ServerDiscover>();
     public EventSystem Event => GetComp<EventSystem>();
 
     public GameServer(ushort serverId, ushort serverType, string name) : base(serverId, serverType, name)

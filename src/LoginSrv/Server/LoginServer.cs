@@ -71,8 +71,8 @@ public class LoginServer : ServerApp
 
     protected override void OnStart()
     {
-        this.AddComp(new ActorComp());
-        ClusterComp clusterComp = this.AddComp(new ClusterComp());
+        this.AddComp(new MessageInbox());
+        ServerDiscover clusterComp = this.AddComp(new ServerDiscover());
         clusterComp.Init();
     }
 

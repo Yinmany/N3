@@ -6,11 +6,11 @@ using System.Net;
 namespace ProjectX;
 
 /// <summary>
-/// 集群组件
+/// 服务发现
 /// </summary>
-public class ClusterComp : AComponent
+public class ServerDiscover : AComponent
 {
-    public static SLogger logger = new SLogger("ClusterComp");
+    public static SLogger logger = new SLogger("ServerDiscover");
 
     private readonly Dictionary<uint, List<PbServerInfo>> _infos = new Dictionary<uint, List<PbServerInfo>>();
     private ServerConfig _worldServerConfig;
@@ -51,8 +51,9 @@ public class ClusterComp : AComponent
         };
 
         //logger.Info($"正在注册: {serverInfo.ToJson()}...");
-        A2W_Server_AppRsp rsp = await Call<A2W_Server_AppRsp>(_worldServerActorId, new A2W_Server_AppReq { ServerInfo = serverInfo, Op = 1 });
+        A2W_Server_AppRsp rsp = await MessageCenter.Ins.Call<A2W_Server_AppRsp>(_worldServerActorId, new A2W_Server_AppReq { ServerInfo = serverInfo, Op = 1 });
         //logger.Info($"注册成功: {serverInfo.ToJson()}...ok!");
+
     }
 
     private void AddServerInfo(PbServerInfo serverInfo)
@@ -80,8 +81,8 @@ public class ClusterComp : AComponent
                     if (info.ActorId == serverInfo.ActorId)
                         continue;
 
-                    Send(info.ActorId, addMsg);
-                    Send(serverInfo.ActorId, new W2A_Server_AppMsg { ServerInfo = info, Op = 1 });
+                    MessageCenter.Ins.Send(info.ActorId, addMsg);
+                    MessageCenter.Ins.Send(serverInfo.ActorId, new W2A_Server_AppMsg { ServerInfo = info, Op = 1 });
                 }
             }
         }
@@ -97,21 +98,5 @@ public class ClusterComp : AComponent
         {
 
         }
-    }
-
-    public static void Send(long id, IMessage msg)
-    {
-        MessageCenter.Ins.Send(id, msg);
-    }
-
-    public static ValueTask<IResponse> Call(long id, IRequest request, short timeout = 60)
-    {
-        return MessageCenter.Ins.Call(id, request, timeout);
-    }
-
-    public static async UniTask<TRsp> Call<TRsp>(long id, IRequest request, short timeout = 60) where TRsp : class, IResponse
-    {
-        TRsp rsp = (TRsp)await MessageCenter.Ins.Call(id, request, timeout);
-        return rsp;
     }
 }

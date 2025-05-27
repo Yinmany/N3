@@ -4,9 +4,9 @@ using Cysharp.Threading.Tasks;
 namespace N3;
 
 /// <summary>
-/// Actor组件，用于接受处理消息
+/// 消息收件箱
 /// </summary>
-public class ActorComp : AComponent, IMessageReceiver
+public class MessageInbox : AComponent, IMessageReceiver
 {
     private static readonly RpcReplyAction ReplyAction = OnReply;
 
@@ -93,9 +93,16 @@ public class ActorComp : AComponent, IMessageReceiver
         return MessageCenter.Ins.Send(Did.Make(0, nodeId), rsp);
     }
 
+    #region 网络线程
     public void OnUnsafeReceive(ushort fromNodeId, IMessage message)
     {
         _queue.Enqueue((fromNodeId, message));
         _signal.Signal();
     }
+
+    public void OnUnsafeNodeNetworkStatus(ushort nodeId, NodeNetworkState status, bool isClient)
+    {
+
+    }
+    #endregion
 }

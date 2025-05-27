@@ -10,7 +10,16 @@ public partial class MessageCenter : IConnHandler
 {
     public void OnConnected(TcpConn conn)
     {
+    }
 
+    private void OnConnected2(TcpConn conn)
+    {
+        ushort nodeId = (ushort)conn.NetId;
+
+        foreach (var item in _receivers.Values)
+        {
+            item.OnUnsafeNodeNetworkStatus(nodeId, NodeNetworkState.Connected, !conn.IsAccept);
+        }
     }
 
     public void OnRead(TcpConn conn, ref ReadOnlySequence<byte> buffer)
@@ -35,6 +44,7 @@ public partial class MessageCenter : IConnHandler
             Span<byte> head = stackalloc byte[2];
             _ = byteBuf.Read(head);
             conn.NetId = BinaryPrimitives.ReadUInt16LittleEndian(head);
+            OnConnected2(conn);
             logger.Info($"connect from client: {conn.NetId} {conn.RemoteEndPoint}");
         }
         else
@@ -65,7 +75,7 @@ public partial class MessageCenter : IConnHandler
     {
         if (msg is IResponse resp)
         {
-            Post(_rspCallback, resp);
+            _workQueue.Post(_rspCallback, resp);
             return;
         }
 
@@ -86,17 +96,24 @@ public partial class MessageCenter : IConnHandler
         receiver.OnUnsafeReceive(fromNodeId, msg);
     }
 
+
+
     public void OnDisconnected(TcpConn conn)
     {
         if (conn.NetId == 0)
             return;
 
-        Post(_ =>
+        _workQueue.Post(_ =>
         {
             ushort nodeId = (ushort)conn.NetId;
             if (!_sessions.TryGetValue(nodeId, out var session))
                 return;
             session.RpcCallbackDisconnectError();
+
+            foreach (var item in _receivers.Values)
+            {
+                item.OnUnsafeNodeNetworkStatus(nodeId, NodeNetworkState.Disconnected, !conn.IsAccept);
+            }
         }, null);
     }
 

@@ -11,7 +11,7 @@ sealed class A2W_Server_AppReqHandler : ReqHandler<ServerApp, A2W_Server_AppReq,
         //this.DebugMsg(req);
 
         A2W_Server_AppRsp rsp = new A2W_Server_AppRsp();
-        var cluster = self.GetComp<ClusterComp>();
+        var cluster = self.GetComp<ServerDiscover>();
         cluster.ServerInfoChanged(req.ServerInfo, req.Op);
         reply.Send(rsp);
         return UniTask.CompletedTask;

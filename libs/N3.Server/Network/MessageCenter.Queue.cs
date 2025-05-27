@@ -5,26 +5,51 @@ namespace N3;
 
 public partial class MessageCenter
 {
-    public void Execute()
+    private sealed class InternalWorkQueue : WorkQueue, IThreadPoolWorkItem
     {
-        while (true)
-        {
-            this.Process();
-            ProcessSend();
-            _doWorking = 0;
-            Thread.MemoryBarrier();
-            if (this.IsEmpty && _sendQueue.IsEmpty)
-                break;
-            if (Interlocked.Exchange(ref _doWorking, 1) == 1)
-                break;
-        }
-    }
+        private int _doWorking = 0;
+        private readonly MessageCenter messageCenter;
 
-    private void TryExecute()
-    {
-        if (Interlocked.CompareExchange(ref _doWorking, 1, 0) == 0)
+        public InternalWorkQueue(MessageCenter messageCenter)
         {
-            ThreadPool.UnsafeQueueUserWorkItem(this, false);
+            this.messageCenter = messageCenter;
+        }
+
+        void IThreadPoolWorkItem.Execute()
+        {
+            while (true)
+            {
+                this.Process();
+                messageCenter.ProcessSend();
+                _doWorking = 0;
+                Thread.MemoryBarrier();
+                if (this.IsEmpty && messageCenter._sendQueue.IsEmpty)
+                    break;
+                if (Interlocked.Exchange(ref _doWorking, 1) == 1)
+                    break;
+            }
+        }
+
+        public void TryExecute()
+        {
+            if (Interlocked.CompareExchange(ref _doWorking, 1, 0) == 0)
+            {
+                ThreadPool.UnsafeQueueUserWorkItem(this, false);
+            }
+        }
+
+        protected override bool TryInlineExecute(SendOrPostCallback d, object? state)
+        {
+            return false;
+        }
+
+        protected override void OnPostWorkItem()
+        {
+            TryExecute();
+        }
+
+        protected override void OnUpdate()
+        {
         }
     }
 
@@ -126,19 +151,5 @@ public partial class MessageCenter
 
             session.timeoutQueue.Enqueue(rpcId, tcs.Timeout);
         }
-    }
-
-    protected override bool TryInlineExecute(SendOrPostCallback d, object? state)
-    {
-        return false;
-    }
-
-    protected override void OnPostWorkItem()
-    {
-        TryExecute();
-    }
-
-    protected override void OnUpdate()
-    {
     }
 }

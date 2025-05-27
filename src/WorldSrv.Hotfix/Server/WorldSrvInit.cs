@@ -10,8 +10,8 @@ public class WorldSrvInit : IServerInit
 {
     public UniTask OnInit(ServerApp app)
     {
-        app.AddComp(new ActorComp());
-        app.AddComp(new ClusterComp()); // 用于管理
+        app.AddComp(new MessageInbox());
+        app.AddComp(new ServerDiscover()); // 用于管理
 
         SLog.Info("OnInit");
         return UniTask.CompletedTask;

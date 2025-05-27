@@ -6,6 +6,15 @@ using System.Runtime.CompilerServices;
 namespace N3;
 
 /// <summary>
+/// 节点网络状态
+/// </summary>
+public enum NodeNetworkState
+{
+    Connected,
+    Disconnected
+}
+
+/// <summary>
 /// 消息接收者
 /// </summary>
 public interface IMessageReceiver
@@ -13,9 +22,17 @@ public interface IMessageReceiver
     /// <summary>
     /// 线程不安全的
     /// </summary>
-    /// <param name="fromNodeId"></param>
-    /// <param name="message"></param>
+    /// <param name="fromNodeId">消息来之的节点id</param>
+    /// <param name="message">消息</param>
     void OnUnsafeReceive(ushort fromNodeId, IMessage message);
+
+    /// <summary>
+    /// 节点网络状态
+    /// </summary>
+    /// <param name="nodeId"></param>
+    /// <param name="status">状态</param>
+    /// <param name="isClientSide">是否是当前节点发出的连接(Client)，否则就是收到连接(Server)</param>
+    void OnUnsafeNodeNetworkStatus(ushort nodeId, NodeNetworkState status, bool isClientSide);
 }
 
 public interface IMessageCenter
@@ -27,12 +44,6 @@ public interface IMessageCenter
 
     void RemoveReceiver(long id);
 
-    /// <summary>
-    /// 订阅连接断开
-    /// </summary>
-    /// <returns></returns>
-    IDisposable SubscribeDisconnect(Action<ushort, bool> callback);
-
     bool Send(long id, IMessage msg);
 
     /// <summary>
@@ -43,15 +54,26 @@ public interface IMessageCenter
     /// <param name="timeout">超时默认60s(-1不超时)</param>
     /// <returns></returns>
     ValueTask<IResponse> Call(long id, IRequest req, short timeout = 60);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TRsp"></typeparam>
+    /// <param name="id"></param>
+    /// <param name="req"></param>
+    /// <param name="timeout"></param>
+    /// <returns></returns>
+    ValueTask<TRsp> Call<TRsp>(long id, IRequest req, short timeout = 60) where TRsp : class, IResponse;
 }
 
 /// <summary>
 /// 消息中心
 /// </summary>
-public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkItem
+public partial class MessageCenter : IMessageCenter
 {
     public static IMessageCenter Ins { get; } = new MessageCenter();
 
+    private readonly InternalWorkQueue _workQueue;
     private readonly SocketSchedulers _socketSchedulers = new(false, 1);
 
     private readonly ConcurrentDictionary<long, IMessageReceiver> _receivers = new();
@@ -62,16 +84,15 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     private readonly CancellationTokenSource _shutdownCts = new();
     private readonly SendOrPostCallback _rspCallback;
     private readonly SendOrPostCallback _timeoutCheckCallback;
-    private readonly List<DisconnectSubscribe> _disconnectSubscribes = new List<DisconnectSubscribe>();
     private readonly RpcTimeoutQueue _innerTimeoutQueue;
 
     private int _rpcIdGen = 0;
-    private int _doWorking = 0;
 
     private static SLogger logger = new SLogger(nameof(MessageCenter));
 
     private MessageCenter()
     {
+        _workQueue = new InternalWorkQueue(this);
         _rspCallback = OnResponse;
         _timeoutCheckCallback = OnTimeoutCheck;
         _innerTimeoutQueue = new RpcTimeoutQueue(_callbacks);
@@ -96,7 +117,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
                     break;
                 conn.Handler = this;
                 CancellationTokenRegistration registration = cancellationToken.Register(state => { _ = ((TcpConn)state!).CloseAsync(); }, conn);
-                conn.ClosedToken.Register(() => registration.Dispose());
+                conn.ClosedToken.Register(registration.Dispose);
                 conn.Start();
             }
         }
@@ -108,7 +129,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         return session;
     }
 
-    private void OnTimeout(TimerInfo handle) => Post(_timeoutCheckCallback, null);
+    private void OnTimeout(TimerInfo handle) => _workQueue.Post(_timeoutCheckCallback, null);
 
     private void OnTimeoutCheck(object? state)
     {
@@ -123,12 +144,12 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
     private void PostSendQueue(long id, object state)
     {
         _sendQueue.Enqueue((id, state));
-        TryExecute();
+        _workQueue.TryExecute();
     }
 
     public void AddNode(ushort nodeId, IPEndPoint ip)
     {
-        this.Post(_ =>
+        _workQueue.Post(_ =>
         {
             if (_sessions.TryGetValue(nodeId, out var session))
             {
@@ -144,7 +165,7 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
 
     public bool RemoveNode(ushort id, bool disconnect = true)
     {
-        Post(_ =>
+        _workQueue.Post(_ =>
         {
             if (!_sessions.Remove(id, out var session))
                 return;
@@ -168,38 +189,6 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         _receivers.TryRemove(id, out _);
     }
 
-    internal class DisconnectSubscribe(Action<ushort, bool> callback) : IDisposable
-    {
-        private Action<ushort, bool>? _callback = callback;
-        private SynchronizationContext? _synchronizationContext = SynchronizationContext.Current;
-
-        public bool IsDisposed => Volatile.Read(ref _callback) == null;
-
-        public void Invoke(ushort nodeId, bool isLocal) => _callback?.Invoke(nodeId, isLocal);
-
-        public void Dispose()
-        {
-            if (Interlocked.Exchange(ref _callback, null) != null)
-            {
-                MessageCenter mc = (MessageCenter)Ins;
-                mc.Post(_ => { mc._disconnectSubscribes.Remove(this); }, null);
-            }
-        }
-    }
-
-
-    public IDisposable SubscribeDisconnect(Action<ushort, bool> callback)
-    {
-        DisconnectSubscribe disconnectSubscribe = new DisconnectSubscribe(callback);
-        Post(_ =>
-        {
-            if (disconnectSubscribe.IsDisposed)
-                return;
-            _disconnectSubscribes.Add(disconnectSubscribe);
-        }, null);
-        return disconnectSubscribe;
-    }
-
     public bool Send(long id, IMessage msg)
     {
         PostSendQueue(id, msg);
@@ -212,5 +201,10 @@ public partial class MessageCenter : WorkQueue, IMessageCenter, IThreadPoolWorkI
         ResponseTcs tcs = ResponseTcs.Create(req, idInfo.NodeId, timeout);
         PostSendQueue(id, tcs);
         return tcs.Task;
+    }
+
+    public async ValueTask<TRsp> Call<TRsp>(long id, IRequest req, short timeout = 60) where TRsp : class, IResponse
+    {
+        return (TRsp)await this.Call(id, req, timeout);
     }
 }

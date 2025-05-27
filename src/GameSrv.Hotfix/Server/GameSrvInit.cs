@@ -28,8 +28,8 @@ public class GameSrvInit : IServerInit
         //}
 
         // game server 全局组件
-        app.AddComp(new ActorComp());
-        app.AddComp(new ClusterComp());
+        app.AddComp(new MessageInbox());
+        app.AddComp(new ServerDiscover());
 
         gs.Cluster.Init();
 

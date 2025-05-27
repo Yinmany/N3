@@ -12,8 +12,8 @@ public class GateSrvInit : IServerInit
     {
         GateServer gate = (GateServer)app;
 
-        app.AddComp(new ActorComp());
-        app.AddComp(new ClusterComp());
+        app.AddComp(new MessageInbox());
+        app.AddComp(new ServerDiscover());
 
         gate.Cluster.Init();
     }
